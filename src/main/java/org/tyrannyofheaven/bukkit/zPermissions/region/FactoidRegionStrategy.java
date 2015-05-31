@@ -18,8 +18,8 @@ package org.tyrannyofheaven.bukkit.zPermissions.region;
 import java.util.Collections;
 import java.util.Set;
 
-import me.tabinol.factoid.Factoid;
-import me.tabinol.factoid.lands.Land;
+import me.tabinol.factoidapi.FactoidAPI;
+import me.tabinol.factoidapi.lands.ILand;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -82,7 +82,7 @@ public class FactoidRegionStrategy implements RegionStrategy, Listener {
 
     @Override
     public Set<String> getRegions(Location location, Player player) {
-        Land land = Factoid.getLands().getLand(location);
+        ILand land = FactoidAPI.iLands().getLand(location);
         if (land != null) {
             return Collections.singleton(land.getName()); // Land name is always lower case
         }
