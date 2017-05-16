@@ -15,11 +15,6 @@
  */
 package org.tyrannyofheaven.bukkit.zPermissions.util.command;
 
-import java.io.File;
-import java.io.InputStream;
-import java.util.List;
-import java.util.logging.Logger;
-
 import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -29,7 +24,10 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginLoader;
 
-import com.avaje.ebean.EbeanServer;
+import java.io.File;
+import java.io.InputStream;
+import java.util.List;
+import java.util.logging.Logger;
 
 public class MyPlugin implements Plugin {
 
@@ -113,11 +111,6 @@ public class MyPlugin implements Plugin {
 
     @Override
     public void setNaggable(boolean canNag) {
-    }
-
-    @Override
-    public EbeanServer getDatabase() {
-        return null;
     }
 
     @Override

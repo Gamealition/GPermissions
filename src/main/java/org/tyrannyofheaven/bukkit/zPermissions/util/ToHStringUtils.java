@@ -15,11 +15,11 @@
  */
 package org.tyrannyofheaven.bukkit.zPermissions.util;
 
+import org.tyrannyofheaven.bukkit.zPermissions.util.command.ToHCommandExecutor;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
-
-import org.tyrannyofheaven.bukkit.zPermissions.util.command.ToHCommandExecutor;
 
 /**
  * Utility methods I miss from Spring StringUtils and/or Commons-Lang.

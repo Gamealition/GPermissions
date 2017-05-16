@@ -1,10 +1,9 @@
-name: zPermissions
-version: ${version}
-main: org.tyrannyofheaven.bukkit.zPermissions.ZPermissionsPlugin
-description: Superperms implementation with Bukkit database backend
-author: ZerothAngel
-database: false
-load: STARTUP
+name:        ${project.artifactId}
+version:     ${project.version}
+description: ${project.description}
+authors:     [ZerothAngel, md-5, CoolV1994, RoyCurtis]
+main:        org.tyrannyofheaven.bukkit.zPermissions.ZPermissionsPlugin
+load:        STARTUP
 
 commands:
   permissions:

@@ -1,9 +1,5 @@
 config-version: 19
 
-database-support: true
-
-database-read-only: false
-
 region-support: true
 
 group-permission: 'group.%s'

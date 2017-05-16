@@ -15,32 +15,6 @@
  */
 package org.tyrannyofheaven.bukkit.zPermissions;
 
-import static org.tyrannyofheaven.bukkit.zPermissions.util.ToHLoggingUtils.debug;
-import static org.tyrannyofheaven.bukkit.zPermissions.util.ToHLoggingUtils.error;
-import static org.tyrannyofheaven.bukkit.zPermissions.util.ToHLoggingUtils.log;
-import static org.tyrannyofheaven.bukkit.zPermissions.util.ToHLoggingUtils.warn;
-import static org.tyrannyofheaven.bukkit.zPermissions.util.ToHMessageUtils.broadcastAdmin;
-import static org.tyrannyofheaven.bukkit.zPermissions.util.ToHMessageUtils.colorize;
-import static org.tyrannyofheaven.bukkit.zPermissions.util.ToHMessageUtils.sendMessage;
-import static org.tyrannyofheaven.bukkit.zPermissions.util.ToHStringUtils.hasText;
-import static org.tyrannyofheaven.bukkit.zPermissions.util.command.reader.CommandReader.abortBatchProcessing;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -56,22 +30,6 @@ import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.tyrannyofheaven.bukkit.zPermissions.util.ToHDatabaseUtils;
-import org.tyrannyofheaven.bukkit.zPermissions.util.ToHFileUtils;
-import org.tyrannyofheaven.bukkit.zPermissions.util.ToHNamingConvention;
-import org.tyrannyofheaven.bukkit.zPermissions.util.ToHSchemaVersion;
-import org.tyrannyofheaven.bukkit.zPermissions.util.ToHStringUtils;
-import org.tyrannyofheaven.bukkit.zPermissions.util.ToHUtils;
-import org.tyrannyofheaven.bukkit.zPermissions.util.VersionInfo;
-import org.tyrannyofheaven.bukkit.zPermissions.util.command.CommandExceptionHandler;
-import org.tyrannyofheaven.bukkit.zPermissions.util.command.ToHCommandExecutor;
-import org.tyrannyofheaven.bukkit.zPermissions.util.transaction.TransactionCallback;
-import org.tyrannyofheaven.bukkit.zPermissions.util.transaction.TransactionCallbackWithoutResult;
-import org.tyrannyofheaven.bukkit.zPermissions.util.transaction.TransactionStrategy;
-import org.tyrannyofheaven.bukkit.zPermissions.util.uuid.CascadingUuidResolver;
-import org.tyrannyofheaven.bukkit.zPermissions.util.uuid.CommandUuidResolver;
-import org.tyrannyofheaven.bukkit.zPermissions.util.uuid.MojangUuidResolver;
-import org.tyrannyofheaven.bukkit.zPermissions.util.uuid.UuidResolver;
 import org.tyrannyofheaven.bukkit.zPermissions.PermissionsResolver.ResolverResult;
 import org.tyrannyofheaven.bukkit.zPermissions.command.DirTypeCompleter;
 import org.tyrannyofheaven.bukkit.zPermissions.command.GroupTypeCompleter;
@@ -82,36 +40,38 @@ import org.tyrannyofheaven.bukkit.zPermissions.dao.PermissionService;
 import org.tyrannyofheaven.bukkit.zPermissions.listener.ZPermissionsFallbackListener;
 import org.tyrannyofheaven.bukkit.zPermissions.listener.ZPermissionsPlayerListener;
 import org.tyrannyofheaven.bukkit.zPermissions.listener.ZPermissionsRegionPlayerListener;
-import org.tyrannyofheaven.bukkit.zPermissions.model.DataVersion;
-import org.tyrannyofheaven.bukkit.zPermissions.model.EntityMetadata;
-import org.tyrannyofheaven.bukkit.zPermissions.model.Entry;
-import org.tyrannyofheaven.bukkit.zPermissions.model.Inheritance;
 import org.tyrannyofheaven.bukkit.zPermissions.model.Membership;
-import org.tyrannyofheaven.bukkit.zPermissions.model.PermissionEntity;
-import org.tyrannyofheaven.bukkit.zPermissions.model.PermissionRegion;
-import org.tyrannyofheaven.bukkit.zPermissions.model.PermissionWorld;
-import org.tyrannyofheaven.bukkit.zPermissions.model.UuidDisplayNameCache;
-import org.tyrannyofheaven.bukkit.zPermissions.region.FactionsRegionStrategy;
-import org.tyrannyofheaven.bukkit.zPermissions.region.FactoidRegionStrategy;
-import org.tyrannyofheaven.bukkit.zPermissions.region.RegionStrategy;
-import org.tyrannyofheaven.bukkit.zPermissions.region.ResidenceRegionStrategy;
-import org.tyrannyofheaven.bukkit.zPermissions.region.WorldGuardRegionStrategy;
+import org.tyrannyofheaven.bukkit.zPermissions.region.*;
 import org.tyrannyofheaven.bukkit.zPermissions.service.DefaultPlayerPrefixHandler;
 import org.tyrannyofheaven.bukkit.zPermissions.service.PlayerPrefixHandler;
 import org.tyrannyofheaven.bukkit.zPermissions.service.ZPermissionsServiceImpl;
-import org.tyrannyofheaven.bukkit.zPermissions.storage.AvajeStorageStrategy;
 import org.tyrannyofheaven.bukkit.zPermissions.storage.FileStorageStrategy;
 import org.tyrannyofheaven.bukkit.zPermissions.storage.StorageStrategy;
-import org.tyrannyofheaven.bukkit.zPermissions.util.ExpirationRefreshHandler;
-import org.tyrannyofheaven.bukkit.zPermissions.util.ModelDumper;
-import org.tyrannyofheaven.bukkit.zPermissions.util.RefreshTask;
-import org.tyrannyofheaven.bukkit.zPermissions.uuid.AvajeBulkUuidConverter;
+import org.tyrannyofheaven.bukkit.zPermissions.util.*;
+import org.tyrannyofheaven.bukkit.zPermissions.util.command.CommandExceptionHandler;
+import org.tyrannyofheaven.bukkit.zPermissions.util.command.ToHCommandExecutor;
+import org.tyrannyofheaven.bukkit.zPermissions.util.transaction.TransactionCallback;
+import org.tyrannyofheaven.bukkit.zPermissions.util.transaction.TransactionCallbackWithoutResult;
+import org.tyrannyofheaven.bukkit.zPermissions.util.transaction.TransactionStrategy;
+import org.tyrannyofheaven.bukkit.zPermissions.util.uuid.CascadingUuidResolver;
+import org.tyrannyofheaven.bukkit.zPermissions.util.uuid.CommandUuidResolver;
+import org.tyrannyofheaven.bukkit.zPermissions.util.uuid.MojangUuidResolver;
+import org.tyrannyofheaven.bukkit.zPermissions.util.uuid.UuidResolver;
 import org.tyrannyofheaven.bukkit.zPermissions.uuid.YamlBulkUuidConverter;
 import org.tyrannyofheaven.bukkit.zPermissions.vault.VaultChatBridge;
 import org.tyrannyofheaven.bukkit.zPermissions.vault.VaultPermissionBridge;
 
-import com.avaje.ebean.EbeanServer;
-import com.avaje.ebeaninternal.api.SpiEbeanServer;
+import java.io.File;
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+
+import static org.tyrannyofheaven.bukkit.zPermissions.util.ToHLoggingUtils.*;
+import static org.tyrannyofheaven.bukkit.zPermissions.util.ToHMessageUtils.*;
+import static org.tyrannyofheaven.bukkit.zPermissions.util.ToHStringUtils.hasText;
+import static org.tyrannyofheaven.bukkit.zPermissions.util.command.reader.CommandReader.abortBatchProcessing;
 
 /**
  * zPermissions main class.
@@ -147,9 +107,6 @@ public class ZPermissionsPlugin extends JavaPlugin implements ZPermissionsCore, 
     // Default max attempts (after the first) to complete a transaction
     private static final int DEFAULT_TXN_MAX_RETRIES = 1;
 
-    // Default database support
-    private static final boolean DEFAULT_DATABASE_SUPPORT = true;
-
     // Default number of ticks to wait between permissions refreshes of all players
     private static final int DEFAULT_BULK_REFRESH_DELAY = 5;
 
@@ -161,12 +118,6 @@ public class ZPermissionsPlugin extends JavaPlugin implements ZPermissionsCore, 
 
     // Default rank broadcast to admins
     private static final boolean DEFAULT_RANK_ADMIN_BROADCAST = false;
-
-    // Default auto-refresh interval
-    private static final int DEFAULT_AUTO_REFRESH_INTERVAL = -1;
-
-    // Default auto-refresh forced refreshes
-    private static final boolean DEFAULT_AUTO_REFRESH_FORCE = false;
 
     // Default primary group track
     private static final String DEFAULT_PRIMARY_GROUP_TRACK = null;
@@ -194,9 +145,6 @@ public class ZPermissionsPlugin extends JavaPlugin implements ZPermissionsCore, 
 
     // Name of metadata key for our PlayerState instances
     private static final String PLAYER_METADATA_KEY = "zPermissions.PlayerState";
-
-    // Default read-only flag
-    private static final boolean DEFAULT_DATABASE_READ_ONLY = false;
 
     // Default metadata inheritance
     private static final boolean DEFAULT_INHERITED_METADATA = false;
@@ -270,20 +218,8 @@ public class ZPermissionsPlugin extends JavaPlugin implements ZPermissionsCore, 
     // Names of tracks (in original case)
     private final Set<String> trackNames = new LinkedHashSet<>();
 
-    // Whether or not to use the database (Avaje) storage strategy
-    private boolean databaseSupport;
-
     // Maximum number of times to retry transactions (so total attempts is +1)
     private int txnMaxRetries;
-
-    // Interval for auto-refresh
-    private int autoRefreshInterval;
-
-    // Whether or not auto-refreshes should be forced refreshes
-    private boolean autoRefreshForce;
-
-    // Task ID for auto-refresh task
-    private int autoRefreshTaskId = -1;
 
     // Default primary group track
     private String defaultPrimaryGroupTrack;
@@ -314,17 +250,8 @@ public class ZPermissionsPlugin extends JavaPlugin implements ZPermissionsCore, 
     // Whether to log Vault changes at INFO level
     private boolean logVaultChanges;
 
-    // Whether the database should be read-only
-    private boolean databaseReadOnly;
-
     // Strategy for permissions storage
     private StorageStrategy storageStrategy;
-
-    // Create our own instance rather than use Bukkit's
-    private EbeanServer ebeanServer;
-
-    // Custom NamingConvention for Avaje
-    private final ToHNamingConvention namingConvention = new ToHNamingConvention(this, "zperms_schema_version");
 
     // Backwards compatibility. Broadcast to admins if true, the custom permissions otherwise.
     private boolean rankAdminBroadcast = DEFAULT_RANK_ADMIN_BROADCAST;
@@ -541,32 +468,7 @@ public class ZPermissionsPlugin extends JavaPlugin implements ZPermissionsCore, 
                 log(this, "Using custom storage strategy: %s", storageStrategyClassName);
                 storageStrategy = (StorageStrategy)Class.forName(storageStrategyClassName).newInstance();
             }
-            else if (databaseSupport) {
-                // Use the default Avaje-based StorageStrategy
-                ebeanServer = ToHDatabaseUtils.createEbeanServer(this, getClassLoader(), namingConvention, config);
-   
-                SpiEbeanServer spiEbeanServer = (SpiEbeanServer)ebeanServer;
-                if (spiEbeanServer.getDatabasePlatform().getName().contains("sqlite")) {
-                    log(this, Level.WARNING, "This plugin is NOT compatible with SQLite.");
-                    log(this, Level.WARNING, "Edit bukkit.yml to switch databases or disable database support in config.yml.");
-                    log(this, Level.WARNING, "Falling back to file-based storage strategy.");
-                    // Do nothing else (storageStrategy still null)
-                }
-                else {
-                    ToHDatabaseUtils.upgradeDatabase(this, namingConvention, getClassLoader(), "sql");
-
-                    if (uuidMigrate) {
-                        // Perform migration
-                        new AvajeBulkUuidConverter(this, uuidResolver).migrate();
-                    }
-
-                    log(this, "Using database storage strategy.");
-                    storageStrategy = new AvajeStorageStrategy(this, txnMaxRetries, databaseReadOnly);
-                }
-            }
-            
-            // If still no storage strategy at this point, use flat-file one
-            if (storageStrategy == null) {
+            else {
                 log(this, "Using file-based storage strategy.");
                 File dataFile = new File(getDataFolder(), FILE_STORAGE_FILENAME);
                 
@@ -650,9 +552,6 @@ public class ZPermissionsPlugin extends JavaPlugin implements ZPermissionsCore, 
                 refreshPlayer(player.getUniqueId(), RefreshCause.GROUP_CHANGE);
             }
 
-            // Start auto-refresh task, if one is configured
-            startAutoRefreshTask();
-
             // Initialize expiration handler
             refreshExpirations();
             
@@ -704,30 +603,6 @@ public class ZPermissionsPlugin extends JavaPlugin implements ZPermissionsCore, 
                 return;
             }
         }
-    }
-
-    @Override
-    public EbeanServer getDatabase() {
-        return ebeanServer;
-    }
-
-    /* (non-Javadoc)
-     * @see org.bukkit.plugin.java.JavaPlugin#getDatabaseClasses()
-     */
-    @Override
-    public List<Class<?>> getDatabaseClasses() {
-        List<Class<?>> result = new ArrayList<>();
-        result.add(ToHSchemaVersion.class);
-        result.add(PermissionEntity.class);
-        result.add(Inheritance.class);
-        result.add(PermissionRegion.class);
-        result.add(PermissionWorld.class);
-        result.add(Entry.class);
-        result.add(Membership.class);
-        result.add(EntityMetadata.class);
-        result.add(DataVersion.class);
-        result.add(UuidDisplayNameCache.class);
-        return result;
     }
 
     // Remove all state associated with a player
@@ -1104,8 +979,6 @@ public class ZPermissionsPlugin extends JavaPlugin implements ZPermissionsCore, 
         getLogger().setLevel(config.getBoolean("debug", false) ? Level.CONFIG : null);
 
         // Barebones defaults
-        databaseSupport = config.getBoolean("database-support", DEFAULT_DATABASE_SUPPORT);
-        databaseReadOnly = config.getBoolean("database-read-only", DEFAULT_DATABASE_READ_ONLY);
         getResolver().setDefaultGroup(DEFAULT_GROUP);
         defaultTrack = DEFAULT_TRACK;
         dumpDirectory = new File(DEFAULT_DUMP_DIRECTORY);
@@ -1220,8 +1093,6 @@ public class ZPermissionsPlugin extends JavaPlugin implements ZPermissionsCore, 
 
         // FIXME currently hidden option
         refreshTask.setDelay(config.getInt("bulk-refresh-delay", DEFAULT_BULK_REFRESH_DELAY));
-        autoRefreshInterval = config.getInt("auto-refresh-interval", DEFAULT_AUTO_REFRESH_INTERVAL);
-        autoRefreshForce = config.getBoolean("auto-refresh-force", DEFAULT_AUTO_REFRESH_FORCE);
         nativeVaultBridges = config.getBoolean("native-vault-bridges", DEFAULT_NATIVE_VAULT_BRIDGES);
         vaultPrefixIncludesGroup = config.getBoolean("vault-prefix-includes-group", DEFAULT_VAULT_PREFIX_INCLUDES_GROUP);
         vaultMetadataIncludesGroup = config.getBoolean("vault-metadata-includes-group", DEFAULT_VAULT_METADATA_INCLUDES_GROUP);
@@ -1239,8 +1110,6 @@ public class ZPermissionsPlugin extends JavaPlugin implements ZPermissionsCore, 
         uuidResolverCacheSize = config.getInt("uuid-cache-size", DEFAULT_UUID_CACHE_SIZE);
         uuidResolverCacheTtl = config.getLong("uuid-cache-ttl", DEFAULT_UUID_CACHE_TTL);
         uuidMigrate = config.getBoolean("uuid-migrate", DEFAULT_UUID_MIGRATE);
-
-        ToHDatabaseUtils.populateNamingConvention(config, namingConvention);
 
         // Region managers
         regionManagers = new ArrayList<>();
@@ -1306,7 +1175,6 @@ public class ZPermissionsPlugin extends JavaPlugin implements ZPermissionsCore, 
     public void reload() {
         config = ToHFileUtils.getConfig(this);
         readConfig();
-        startAutoRefreshTask();
         refresh(true, new Runnable() {
             @Override
             public void run() {
@@ -1323,35 +1191,6 @@ public class ZPermissionsPlugin extends JavaPlugin implements ZPermissionsCore, 
     @Override
     public void refresh(boolean force, Runnable finishTask) {
         storageStrategy.refresh(force, finishTask);
-    }
-
-    // Cancel existing auto-refresh task and start a new one if autoRefreshInterval is valid
-    private void startAutoRefreshTask() {
-        // Cancel previous task, if any
-        if (autoRefreshTaskId > -1) {
-            Bukkit.getScheduler().cancelTask(autoRefreshTaskId);
-            autoRefreshTaskId = -1;
-        }
-        // Start up new task at new interval
-        if (databaseSupport && autoRefreshInterval > 0) {
-            final Plugin plugin = this;
-            autoRefreshTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
-                @Override
-                public void run() {
-                    log(plugin, "Refreshing from database...");
-                    refresh(autoRefreshForce, new Runnable() {
-                        @Override
-                        public void run() {
-                            // This is executed after the storage refresh is done.
-                            log(plugin, "Refresh done.");
-                            invalidateMetadataCache();
-                            refreshPlayers();
-                            refreshExpirations();
-                        }
-                    });
-                }
-            }, autoRefreshInterval * 20 * 60, autoRefreshInterval * 20 * 60); // FIXME magic numbers
-        }
     }
 
     // Retrieve associated PlayerState, if any
@@ -1462,7 +1301,6 @@ public class ZPermissionsPlugin extends JavaPlugin implements ZPermissionsCore, 
 
     @Override
     public void updateDisplayName(final UUID uuid, final String displayName) {
-        if (databaseReadOnly) return; // Do nothing if in read-only mode
 
         // Run synchronous since I'm not so sure about thread safety of AvajeStorageStrategy's
         // pre-commit hook...

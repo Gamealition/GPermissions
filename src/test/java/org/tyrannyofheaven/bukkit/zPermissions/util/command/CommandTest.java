@@ -15,15 +15,7 @@
  */
 package org.tyrannyofheaven.bukkit.zPermissions.util.command;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import junit.framework.Assert;
-
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permission;
@@ -34,6 +26,8 @@ import org.bukkit.util.StringUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.tyrannyofheaven.bukkit.zPermissions.util.permissions.PermissionException;
+
+import java.util.*;
 
 public class CommandTest {
 
@@ -112,6 +106,13 @@ public class CommandTest {
             public String getName() {
                 return null;
             }
+
+            @Override
+            public Spigot spigot()
+            {
+                return null;
+            }
+
             @Override
             public void sendMessage(String[] arg0) {
             }
