@@ -577,16 +577,6 @@ public class ZPermissionsPlugin extends JavaPlugin implements ZPermissionsCore, 
         regionStrategy = new WorldGuardRegionStrategy(this, getZPermissionsCore());
         strategies.put(regionStrategy.getName(), regionStrategy);
 
-        // Additional region managers are registered here.
-        regionStrategy = new ResidenceRegionStrategy(this, getZPermissionsCore());
-        strategies.put(regionStrategy.getName(), regionStrategy);
-        
-        regionStrategy = new FactionsRegionStrategy(this, getZPermissionsCore());
-        strategies.put(regionStrategy.getName(), regionStrategy);
-
-        regionStrategy = new FactoidRegionStrategy(this, getZPermissionsCore());
-        strategies.put(regionStrategy.getName(), regionStrategy);
-
         // Run through list in preference order
         for (String rmName : regionManagers) {
             regionStrategy = strategies.get(rmName);
