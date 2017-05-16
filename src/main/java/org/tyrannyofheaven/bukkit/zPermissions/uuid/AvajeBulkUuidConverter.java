@@ -15,10 +15,10 @@
  */
 package org.tyrannyofheaven.bukkit.zPermissions.uuid;
 
-import static org.tyrannyofheaven.bukkit.util.ToHLoggingUtils.log;
-import static org.tyrannyofheaven.bukkit.util.ToHLoggingUtils.warn;
-import static org.tyrannyofheaven.bukkit.util.uuid.UuidUtils.SHORT_UUID_RE;
-import static org.tyrannyofheaven.bukkit.util.uuid.UuidUtils.canonicalizeUuid;
+import static org.tyrannyofheaven.bukkit.zPermissions.util.ToHLoggingUtils.log;
+import static org.tyrannyofheaven.bukkit.zPermissions.util.ToHLoggingUtils.warn;
+import static org.tyrannyofheaven.bukkit.zPermissions.util.uuid.UuidUtils.SHORT_UUID_RE;
+import static org.tyrannyofheaven.bukkit.zPermissions.util.uuid.UuidUtils.canonicalizeUuid;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,8 +29,8 @@ import java.util.Set;
 import java.util.regex.Matcher;
 
 import org.bukkit.plugin.Plugin;
-import org.tyrannyofheaven.bukkit.util.uuid.UuidDisplayName;
-import org.tyrannyofheaven.bukkit.util.uuid.UuidResolver;
+import org.tyrannyofheaven.bukkit.zPermissions.util.uuid.UuidDisplayName;
+import org.tyrannyofheaven.bukkit.zPermissions.util.uuid.UuidResolver;
 import org.tyrannyofheaven.bukkit.zPermissions.model.Membership;
 import org.tyrannyofheaven.bukkit.zPermissions.model.PermissionEntity;
 

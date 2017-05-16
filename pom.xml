@@ -30,11 +30,6 @@
             <id>vault-repo</id>
             <url>http://nexus.hc.to/content/repositories/pub_releases</url>
         </repository>
-        <!-- For ToHPluginUtils snapshots -->
-        <repository>
-            <id>tohutils-repo</id>
-            <url>http://coolv1994.github.io/ToHPluginUtils/</url>
-        </repository>
     </repositories>
 
     <dependencies>
@@ -44,12 +39,6 @@
             <artifactId>spigot-api</artifactId>
             <version>1.12-pre2-SNAPSHOT</version>
             <scope>provided</scope>
-        </dependency>
-        <!-- ToHPluginUtils -->
-        <dependency>
-            <groupId>org.tyrannyofheaven.bukkit</groupId>
-            <artifactId>ToHPluginUtils</artifactId>
-            <version>1.0.1-SNAPSHOT</version>
         </dependency>
         <!-- WorldGuard -->
         <dependency>
@@ -138,26 +127,6 @@
                 </configuration>
             </plugin>
 
-            <!-- Generate META-INF metadata to add ToHPluginUtils to classpath -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>2.3.2</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                        </manifest>
-                        <manifestEntries>
-                            <Class-Path>lib/ToHPluginUtils.jar
-                                ${project.artifactId}/ToHPluginUtils.jar ../lib/ToHPluginUtils.jar
-                                ../ToHPluginUtils.jar
-                            </Class-Path>
-                        </manifestEntries>
-                    </archive>
-                </configuration>
-            </plugin>
-
             <!-- Generate findbugs output -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -166,40 +135,6 @@
                 <configuration>
                     <xmlOutput>true</xmlOutput>
                 </configuration>
-            </plugin>
-
-            <!-- Package ToHPluginUtils into the built JAR -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>1.5</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-
-                        <configuration>
-                            <artifactSet>
-                                <includes>
-                                    <include>org.tyrannyofheaven.bukkit:ToHPluginUtils
-                                    </include>
-                                </includes>
-                            </artifactSet>
-
-                            <relocations>
-                                <relocation>
-                                    <pattern>org.tyrannyofheaven.bukkit.util</pattern>
-                                    <shadedPattern>
-                                        org.tyrannyofheaven.bukkit.zPermissions.util
-                                    </shadedPattern>
-                                </relocation>
-                            </relocations>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
