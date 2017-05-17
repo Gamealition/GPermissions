@@ -1,6 +1,6 @@
 # zPermissions &mdash; A Superperms plugin for Bukkit #
 
-zPermissions is primarily an SQL database-backed Superperms (aka Bukkit permissions) implementation. It also supports flat-file storage. Notable features are: multi-world support, ranks with multiple tracks/ladders, group inheritance of arbitrary depth (within reason), and optional region-specific permissions using [WorldGuard](http://dev.bukkit.org/server-mods/worldguard/) regions, [Residence](http://dev.bukkit.org/server-mods/residence/) residences, [Factions](http://dev.bukkit.org/bukkit-plugins/factions/) territories, or [Factoid](http://dev.bukkit.org/bukkit-plugins/factoid/) lands.
+zPermissions is primarily an SQL database-backed Superperms (aka Bukkit permissions) implementation. It also supports flat-file storage. Notable features are: multi-world support, ranks with multiple tracks/ladders, group inheritance of arbitrary depth (within reason), and optional region-specific permissions using [WorldGuard](http://dev.bukkit.org/server-mods/worldguard/) regions.
 
 There is no built-in build protection (I rely on other plugins for that). zPermissions focuses on permissions and only permissions.
 
@@ -12,15 +12,13 @@ Please post bugs and/or feature requests as [dev.bukkit.org tickets](http://dev.
 
 ## Features ##
 
-*   **A variety of storage options, from SQL to flat-file.** Uses Bukkit database to store permissions (i.e. settings in bukkit.yml). Should work with most databases supported by [Avaje Ebean](http://www.avaje.org) &mdash; I've specifically tested with PostgreSQL, MySQL, and H2. The default Bukkit database, SQLite, is **not** supported. zPermissions will automatically fall back to flat-file storage if it is used.
-
 *   **Group inheritance.** Groups may inherit permissions from a multiple parent groups.
 
 *   **Players may be members of more than one group.** The order of which group permissions are applied is well defined and based on group weight (which is configurable, of course).
 
 *   **Multi-world support.** Permissions granted to players and groups may be associated with a specific world.
 
-*   **Optional region support.** Permissions may also be associated with WorldGuard regions or Residence residences.
+*   **Optional region support.** Permissions may also be associated with WorldGuard regions.
 
 *   **Multiple promotion tracks!** Using permissions, you can also limit who can promote/demote others and which tracks they may use. In addition, each player may be promoted/demoted along multiple tracks.
 
