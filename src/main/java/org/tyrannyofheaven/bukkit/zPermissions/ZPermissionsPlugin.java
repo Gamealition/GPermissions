@@ -179,9 +179,6 @@ public class ZPermissionsPlugin extends JavaPlugin implements ZPermissionsCore, 
     // Whether default group membership should be made explicit
     private static final boolean DEFAULT_EXPLICIT_DEFAULT_GROUP_MEMBERSHIP = false;
 
-    // Version info (may include build number)
-    private VersionInfo versionInfo;
-
     // Permission resolver
     private PermissionsResolver resolver = new PermissionsResolver(this);
 
@@ -342,11 +339,6 @@ public class ZPermissionsPlugin extends JavaPlugin implements ZPermissionsCore, 
         return this;
     }
 
-    @Override
-    public void onLoad() {
-        versionInfo = ToHUtils.getVersion(this);
-    }
-
     /* (non-Javadoc)
      * @see org.bukkit.plugin.Plugin#onDisable()
      */
@@ -389,7 +381,7 @@ public class ZPermissionsPlugin extends JavaPlugin implements ZPermissionsCore, 
             removeBukkitPermissions(player, true);
         }
 
-        log(this, "%s disabled.", versionInfo.getVersionString());
+        log(this, "%s disabled.", this.getDescription().getVersion());
     }
 
     /* (non-Javadoc)
@@ -398,7 +390,7 @@ public class ZPermissionsPlugin extends JavaPlugin implements ZPermissionsCore, 
     @Override
     public void onEnable() {
         try {
-            log(this, "%s starting...", versionInfo.getVersionString());
+            log(this, "%s starting...", this.getDescription().getVersion());
 
             // FIXME Defaults workaround, to be removed after 1.0
             boolean isUpgrade = new File(getDataFolder(), "config.yml").exists();
@@ -555,7 +547,7 @@ public class ZPermissionsPlugin extends JavaPlugin implements ZPermissionsCore, 
             // Initialize expiration handler
             refreshExpirations();
             
-            log(this, "%s enabled.", versionInfo.getVersionString());
+            log(this, "%s enabled.", this.getDescription().getVersion());
         }
         catch (Throwable t) {
             unrecoverableError("everything else", t);
@@ -1123,8 +1115,6 @@ public class ZPermissionsPlugin extends JavaPlugin implements ZPermissionsCore, 
         else {
             // Set up default region manager(s)
             regionManagers.add("WorldGuard");
-            regionManagers.add("Residence");
-            regionManagers.add("Factoid");
         }
 
         configureWorldMirrors();
